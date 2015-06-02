@@ -82,10 +82,11 @@ public class WeatherServiceAsync extends LifecycleLoggingService {
 				throws RemoteException {
     		List<WeatherData> weatherResult = Utils.getResults(weather);
 			if (weatherResult != null){
-				//hacer un log y 
 				callBack.sendResults(weatherResult);
 			}else{
-				callBack.sendError("Lo que sea");
+				callBack.sendError("Sorry, no weather forecast for "
+                                        + weather
+                                        + " found, be sure country is correct");
 			}
 			
 		}

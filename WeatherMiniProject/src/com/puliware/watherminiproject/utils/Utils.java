@@ -89,7 +89,10 @@ public class Utils {
                                                jsonWeather.getMain().getTemp(),
                                                jsonWeather.getMain().getHumidity(),
                                                jsonWeather.getSys().getSunrise(),
-                                               jsonWeather.getSys().getSunset()));
+                                               jsonWeather.getSys().getSunset(),                                               
+                                               jsonWeather.getDt(),
+                                               jsonWeather.getWeather().get(0).getIcon(),
+                                               jsonWeather.getWeather().get(0).getDescription()));
                
                     
              // Return the List of AcronymData.

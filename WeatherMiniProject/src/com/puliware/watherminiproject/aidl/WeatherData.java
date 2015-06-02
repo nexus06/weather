@@ -44,6 +44,9 @@ public class WeatherData implements Parcelable {
     public long mHumidity;
     public long mSunrise;
     public long mSunset;
+    public long mDate;
+    public String mIcon;
+    public String mDescription;
 
     /**
      * Constructor
@@ -55,6 +58,9 @@ public class WeatherData implements Parcelable {
      * @param humidity
      * @param sunrise
      * @param sunset
+     * @param description 
+     * @param icon 
+     * @param date 
      */
     public WeatherData(String name,
                        double speed,
@@ -62,7 +68,10 @@ public class WeatherData implements Parcelable {
                        double temp,
                        long humidity,
                        long sunrise,
-                       long sunset) {
+                       long sunset, 
+                       long date, 
+                       String icon, 
+                       String description) {
         mName = name;
         mSpeed = speed;
         mDeg = deg;
@@ -70,6 +79,9 @@ public class WeatherData implements Parcelable {
         mHumidity = humidity;
         mSunrise = sunrise;
         mSunset = sunset;
+        mDate = date;
+        mIcon = icon;
+        mDescription = description;
     }
 
     /**
@@ -83,7 +95,10 @@ public class WeatherData implements Parcelable {
             + ", temp=" + mTemp 
             + ", humidity=" + mHumidity 
             + ", sunrise=" + mSunrise 
-            + ", sunset=" + mSunset + "]";
+            + ", sunset=" + mSunset
+            +", mDate=" + mDate 
+            +", micon=" + mIcon 
+            +", mDescription=" + mDescription + "]";
     }
 
     /*
@@ -111,6 +126,9 @@ public class WeatherData implements Parcelable {
         dest.writeLong(mHumidity);
         dest.writeLong(mSunrise);
         dest.writeLong(mSunset);
+        dest.writeLong(mDate);
+        dest.writeString(mIcon);
+        dest.writeString(mDescription);
     }
 
     /**
@@ -130,6 +148,9 @@ public class WeatherData implements Parcelable {
         mHumidity = in.readLong();
         mSunrise = in.readLong();
         mSunset = in.readLong();
+        mDate = in.readLong();
+        mIcon = in.readString();
+        mDescription = in.readString();
     }
 
     /**

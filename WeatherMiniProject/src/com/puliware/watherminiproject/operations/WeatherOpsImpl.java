@@ -306,7 +306,7 @@ public class WeatherOpsImpl implements WeatherOps {
 
             resetDisplay();
 
-            // Use an anonymous AsyncTask to download the Acronym data
+            // Use an anonymous AsyncTask to download the Weather data
             // in a separate thread and then display any results in
             // the UI thread.
             // Using AsyncTask to avoid UI blocking
@@ -339,15 +339,15 @@ public class WeatherOpsImpl implements WeatherOps {
                         displayResults(weatherDataList);
                     else 
                         Utils.showToast(mActivity.get(),
-                                        "no expansions for "
+                                        "Sorry, no weather forecast for "
                                         + mWeather
-                                        + " found");
+                                        + " found, be sure country is correct");
                 }
                 // Execute the AsyncTask to expand the acronym without
                 // blocking the caller.
             }.execute(acronym);
         } else {
-            Log.d(TAG, "mAcronymCall was null.");
+            Log.d(TAG, "mWeatherCall was null.");
         }
     }
 

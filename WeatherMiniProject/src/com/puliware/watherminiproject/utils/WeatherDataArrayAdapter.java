@@ -1,15 +1,31 @@
 package com.puliware.watherminiproject.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.puliware.watherminiproject.R;
 import com.puliware.watherminiproject.aidl.WeatherData;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -23,7 +39,7 @@ public class WeatherDataArrayAdapter extends ArrayAdapter<WeatherData> {
      * layout for each row.
      */
     public WeatherDataArrayAdapter(Context context) {
-        super(context, R.layout.acronym_data_row);
+        super(context, R.layout.weather_view);
     }
 
     /**
@@ -32,7 +48,7 @@ public class WeatherDataArrayAdapter extends ArrayAdapter<WeatherData> {
      */
     public WeatherDataArrayAdapter(Context context,
                                    List<WeatherData> objects) {
-        super(context, R.layout.acronym_data_row, objects);
+        super(context, R.layout.weather_view, objects);
     }
 
     /**
@@ -56,24 +72,93 @@ public class WeatherDataArrayAdapter extends ArrayAdapter<WeatherData> {
     public View getView(int position,
                         View convertView,
                         ViewGroup parent) {
-    	WeatherData data = getItem(position);
+    	final WeatherData data = getItem(position);
+    	//recicle view 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.acronym_data_row,
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.weather_view,
                                                                     parent,
                                                                     false);
         }
+        
+        Log.d(WeatherDataArrayAdapter.class.getName(), data.toString());
+        
+        //place name
+        TextView resultPlace =
+                (TextView) convertView.findViewById(R.id.place_name);
+        resultPlace.setText(data.mName);
+        
+        TextView resultDate =
+                (TextView) convertView.findViewById(R.id.date);
+       
+        //date
+        Date date = new Date(data.mDate *1000);
+        SimpleDateFormat df2 = new SimpleDateFormat("MMMM,dd");
+        String dateText = df2.format(date);
+        resultDate.setText(dateText);
+        
+      //temp
+        TextView resultTemp =
+                (TextView) convertView.findViewById(R.id.degrees);
+        DecimalFormat df = new DecimalFormat("#.00");
+       
+        resultTemp.setText(df.format(data.mTemp-272.15)+" ºC");
+      
+        
+        new DownloadImageTask((ImageView) convertView.findViewById(R.id.iconImage))
+        .execute("http://openweathermap.org/img/w/"+data.mIcon+".png");
+      
+        TextView resultDescription=
+                (TextView) convertView.findViewById(R.id.icon_description);
+        
+        resultDescription.setText(data.mDescription);
+        
+        TextView humidity=
+                (TextView) convertView.findViewById(R.id.humidity);
+        
+        humidity.setText("Humidity: "+data.mHumidity+ "%");
+        
+        
+        TextView wind=
+                (TextView) convertView.findViewById(R.id.wind);
+        
+        wind.setText("Wind: "+(data.mSpeed*3600)/1000);
+        
+//        TextView resultTV =
+//            (TextView) convertView.findViewById(R.id.degrees);
+//        TextView dbRefsTV = 
+//            (TextView) convertView.findViewById(R.id.date);
+//        TextView yearAddedTV =
+//            (TextView) convertView.findViewById(R.id.place_name);
 
-        TextView resultTV =
-            (TextView) convertView.findViewById(R.id.name);
-        TextView dbRefsTV = 
-            (TextView) convertView.findViewById(R.id.db_refs);
-        TextView yearAddedTV =
-            (TextView) convertView.findViewById(R.id.year_added_to_db);
-
-        resultTV.setText(data.mName);
-        dbRefsTV.setText("" + data.mHumidity);
-        yearAddedTV.setText("" + data.mSunrise);
+//        resultTV.setText(data.mName);
+//        dbRefsTV.setText("" + data.mHumidity);
+//        yearAddedTV.setText("" + data.mSunrise);
 
         return convertView;
+    }
+    
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(Bitmap.createScaledBitmap(result, 200, 200, true) );
+        }
     }
 }

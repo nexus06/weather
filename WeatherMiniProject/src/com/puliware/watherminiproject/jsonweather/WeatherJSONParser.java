@@ -46,7 +46,10 @@ public class WeatherJSONParser {
      */
     public List<JsonWeather> parseJsonWeatherArray(JsonReader reader)
         throws IOException {
-
+    	 // If the acronym wasn't expanded return null;
+        if (reader.peek() == JsonToken.END_OBJECT){
+        	return null;
+        }
         // TODO -- you fill in here.
     	List<JsonWeather> weather = new ArrayList<>();
     			 Log.d(TAG, "READING--->parseJsonWeatherArray ");

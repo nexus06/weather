@@ -36,11 +36,6 @@
          android:onClick="getCurrentWeatherAsync"
          android:text="Look Up Async" />
     </LinearLayout>
-
-    <include
-        android:id="@+id/labels"
-        layout="@layout/acronym_data_row" />
-
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
